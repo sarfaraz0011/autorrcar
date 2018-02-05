@@ -14,6 +14,8 @@ image_array = np.zeros((1, 38400))
 label_array = np.zeros((1, 4), 'float')
 training_data = glob.glob('training_data/*.npz')
 
+## jpg image -> matrix array (numpy) [ 100 images for training images, -> [{'train': [3*500*500], 'label':0}*100]]
+
 # if no data, exit
 if not training_data:
     print "No training data in directory, exit"
@@ -42,7 +44,7 @@ train, test, train_labels, test_labels = train_test_split(X, y, test_size=0.3)
 e1 = cv2.getTickCount()
 
 # create MLP
-layer_sizes = np.int32([38400, 32, 4])
+layer_sizes = np.int32([38400, 32, 4]) # -> [38400->32->4]
 model = cv2.ANN_MLP()
 model.create(layer_sizes)
 criteria = (cv2.TERM_CRITERIA_COUNT | cv2.TERM_CRITERIA_EPS, 500, 0.0001)
@@ -72,7 +74,7 @@ print 'Train accuracy: ', "{0:.2f}%".format(train_rate * 100)
 # test data
 ret_1, resp_1 = model.predict(test)
 prediction_1 = resp_1.argmax(-1)
-true_labels_1 = test_labels.argmax(-1)
+true_labels_1 = test_labels.argmax(-1) # index for maximum probability -> [0,1,2,3]
 
 test_rate = np.mean(prediction_1 == true_labels_1)
 print 'Test accuracy: ', "{0:.2f}%".format(test_rate * 100)
